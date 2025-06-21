@@ -51,3 +51,10 @@ Visual limpo: Sem sobrecarga de informações
 Carregamento rápido: CSS otimizado
 
 O site está totalmente pronto para uso em qualquer dispositivo! 🚀📱💻
+
+📫 Contato
+👨‍💻 Wellington Programador
+🌐 Portfólio
+📧 wellingtonbisposantoss@gmail.com
+📱 WhatsApp: (11)950964105
+

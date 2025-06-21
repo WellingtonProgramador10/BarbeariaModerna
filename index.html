@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Barbershop - Barbearia Dourada</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #d4af37 0%, #ffd700 50%, #d4af37 100%);
+            padding: 1rem 0;
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1a1a1a;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            color: #d4af37;
+            border: 2px solid #d4af37;
+        }
+
+        .btn-primary:hover {
+            background: #d4af37;
+            color: #1a1a1a;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            background: radial-gradient(circle at center, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            color: #ccc;
+        }
+
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .service-card {
+            background: linear-gradient(135deg, #2d2d2d, #3a3a3a);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            border-radius: 15px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .service-card:hover::before {
+            opacity: 1;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.2);
+        }
+
+        .form-container {
+            background: linear-gradient(135deg, #2d2d2d, #3a3a3a);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid #d4af37;
+            margin: 2rem 0;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #d4af37;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #555;
+            border-radius: 8px;
+            background: #1a1a1a;
+            color: #fff;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #d4af37;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+
+        .appointments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .appointment-card {
+            background: linear-gradient(135deg, #2d2d2d, #3a3a3a);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #d4af37;
+            transition: all 0.3s ease;
+        }
+
+        .appointment-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .appointment-status {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #ff9800;
+            color: #fff;
+        }
+
+        .status-confirmed {
+            background: #4caf50;
+            color: #fff;
+        }
+
+        .status-cancelled {
+            background: #f44336;
+            color: #fff;
+        }
+
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .time-slot {
+            padding: 1rem;
+            background: #3a3a3a;
+            border: 2px solid #555;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .time-slot:hover {
+            border-color: #d4af37;
+            background: #4a4a4a;
+        }
+
+        .time-slot.selected {
+            background: #d4af37;
+            color: #1a1a1a;
+            border-color: #d4af37;
+        }
+
+        .time-slot.unavailable {
+            background: #555;
+            color: #999;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #2d2d2d, #3a3a3a);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid #d4af37;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer {
+            background: #1a1a1a;
+            padding: 2rem 0;
+            text-align: center;
+            border-top: 2px solid #d4af37;
+            margin-top: 4rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #2d2d2d, #3a3a3a);
+            margin: 5% auto;
+            padding: 2rem;
+            border: 2px solid #d4af37;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .close {
+            color: #d4af37;
+            float: right;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #ffd700;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .nav-buttons {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .services {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .appointments-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .time-slots {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .form-container {
+                padding: 1.5rem;
+            }
+
+            .modal-content {
+                margin: 10% auto;
+                width: 95%;
+                padding: 1.5rem;
+            }
+
+            .btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+
+            .logo {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .time-slots {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+
+            .service-card {
+                padding: 1.5rem;
+            }
+
+            .appointment-card {
+                padding: 1rem;
+            }
+
+            .form-group input, .form-group select {
+                padding: 0.8rem;
+            }
+
+            .modal-content {
+                margin: 15% auto;
+                padding: 1rem;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .container {
+                padding: 0.5rem;
+            }
+
+            .time-slots {
+                grid-template-columns: 1fr;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">✂️ Golden Barbershop</div>
+            <nav class="nav-buttons">
+                <button class="btn btn-primary" onclick="showSection('home')">Home</button>
+                <button class="btn btn-primary" onclick="showSection('client')">Cliente</button>
+                <button class="btn btn-primary" onclick="showSection('admin')">Admin</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- HOME SECTION -->
+        <section id="home" class="section active">
+            <div class="hero">
+                <h1>Barbearia Dourada</h1>
+                <p>Excelência em cortes masculinos e cuidados pessoais</p>
+                <button class="btn btn-primary" onclick="showSection('client')">Agendar Agora</button>
+            </div>
+
+            <div class="services">
+                <div class="service-card">
+                    <h3>🪒 Corte Clássico</h3>
+                    <p>Corte tradicional com acabamento perfeito</p>
+                    <strong>R$ 35,00</strong>
+                </div>
+                <div class="service-card">
+                    <h3>🧔 Barba & Bigode</h3>
+                    <p>Modelagem e cuidados especiais</p>
+                    <strong>R$ 25,00</strong>
+                </div>
+                <div class="service-card">
+                    <h3>✨ Pacote Completo</h3>
+                    <p>Corte + Barba + Tratamentos</p>
+                    <strong>R$ 55,00</strong>
+                </div>
+                <div class="service-card">
+                    <h3>👶 Infantil</h3>
+                    <p>Cortes especiais para crianças</p>
+                    <strong>R$ 20,00</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- CLIENT SECTION -->
+        <section id="client" class="section">
+            <h2 style="text-align: center; color: #d4af37; margin-bottom: 2rem;">Painel do Cliente</h2>
+            
+            <div id="clientLogin" class="form-container">
+                <h3>Login/Cadastro</h3>
+                <div class="form-group">
+                    <label for="clientCPF">CPF (apenas números):</label>
+                    <input type="text" id="clientCPF" placeholder="12345678900" maxlength="11">
+                </div>
+                <div class="form-group">
+                    <label for="clientName">Nome Completo:</label>
+                    <input type="text" id="clientName" placeholder="Seu nome completo">
+                </div>
+                <div class="form-group">
+                    <label for="clientPhone">Telefone:</label>
+                    <input type="text" id="clientPhone" placeholder="(11) 99999-9999">
+                </div>
+                <button class="btn btn-primary" onclick="clientLogin()">Entrar/Cadastrar</button>
+            </div>
+
+            <div id="clientPanel" style="display: none;">
+                <div class="form-container">
+                    <h3>Novo Agendamento</h3>
+                    <div class="form-group">
+                        <label for="serviceType">Serviço:</label>
+                        <select id="serviceType">
+                            <option value="">Selecione um serviço</option>
+                            <option value="Corte Clássico">Corte Clássico - R$ 35,00</option>
+                            <option value="Barba & Bigode">Barba & Bigode - R$ 25,00</option>
+                            <option value="Pacote Completo">Pacote Completo - R$ 55,00</option>
+                            <option value="Infantil">Infantil - R$ 20,00</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="appointmentDate">Data:</label>
+                        <input type="date" id="appointmentDate" onchange="loadTimeSlots()">
+                    </div>
+                    <div class="form-group">
+                        <label>Horários Disponíveis:</label>
+                        <div id="timeSlots" class="time-slots"></div>
+                    </div>
+                    <button class="btn btn-primary" onclick="bookAppointment()">Agendar</button>
+                </div>
+
+                <div class="form-container">
+                    <h3>Meus Agendamentos</h3>
+                    <div id="clientAppointments" class="appointments-grid"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ADMIN SECTION -->
+        <section id="admin" class="section">
+            <h2 style="text-align: center; color: #d4af37; margin-bottom: 2rem;">Painel Administrativo</h2>
+            
+            <div id="adminLogin" class="form-container">
+                <h3>Login Administrador</h3>
+                <div class="form-group">
+                    <label for="adminUser">Usuário:</label>
+                    <input type="text" id="adminUser" placeholder="admin" value="">
+                </div>
+                <div class="form-group">
+                    <label for="adminPass">Senha:</label>
+                    <input type="password" id="adminPass" placeholder="123456" value="">
+                </div>
+                <button class="btn btn-primary" onclick="adminLogin()">Entrar</button>
+                <button class="btn btn-primary" onclick="fillAdminDemo()" style="margin-left: 0.5rem; background: #555;">
+                    Preencher Demo
+                </button>
+                <p style="margin-top: 1rem; color: #ccc; font-size: 0.9rem;">
+                    Demo: usuário = "admin", senha = "123456"<br>
+                    Ou clique em "Preencher Demo" para preenchimento automático
+                </p>
+            </div>
+
+            <div id="adminPanel" style="display: none;">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalAppointments">0</div>
+                        <div>Total de Agendamentos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="todayAppointments">0</div>
+                        <div>Agendamentos Hoje</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalClients">0</div>
+                        <div>Total de Clientes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="monthRevenue">R$ 0</div>
+                        <div>Receita do Mês</div>
+                    </div>
+                </div>
+
+                <div class="form-container">
+                    <h3>Todos os Agendamentos</h3>
+                    <div id="allAppointments" class="appointments-grid"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal -->
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3 id="modalTitle">Mensagem</h3>
+            <p id="modalMessage"></p>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 Golden Barbershop - Todos os direitos reservados</p>
+        <p>🏆 A melhor barbearia da cidade</p>
+    </footer>
+
+    <script>
+        // Sistema de dados em memória
+        let clients = JSON.parse(localStorage.getItem('barbershop_clients')) || {};
+        let appointments = JSON.parse(localStorage.getItem('barbershop_appointments')) || [];
+        let currentClient = null;
+        let selectedTimeSlot = null;
+
+        // Horários disponíveis
+        const timeSlots = [
+            '08:00', '08:30', '09:00', '09:30', '10:00', '10:30',
+            '11:00', '11:30', '14:00', '14:30', '15:00', '15:30',
+            '16:00', '16:30', '17:00', '17:30', '18:00', '18:30'
+        ];
+
+        // Navegação entre seções
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        // Sistema de modal
+        function showModal(title, message) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('messageModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('messageModal').style.display = 'none';
+        }
+
+        // Sistema de cliente
+        function clientLogin() {
+            const cpf = document.getElementById('clientCPF').value.trim();
+            const name = document.getElementById('clientName').value.trim();
+            const phone = document.getElementById('clientPhone').value.trim();
+
+            if (!cpf || cpf.length !== 11) {
+                showModal('Erro', 'CPF deve conter exatamente 11 dígitos');
+                return;
+            }
+
+            if (!clients[cpf]) {
+                if (!name || !phone) {
+                    showModal('Erro', 'Para novo cadastro, preencha nome e telefone');
+                    return;
+                }
+                clients[cpf] = { name, phone, created: new Date().toISOString() };
+                localStorage.setItem('barbershop_clients', JSON.stringify(clients));
+                showModal('Sucesso', 'Cadastro realizado com sucesso!');
+            }
+
+            currentClient = cpf;
+            document.getElementById('clientLogin').style.display = 'none';
+            document.getElementById('clientPanel').style.display = 'block';
+            loadClientAppointments();
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('appointmentDate').min = today;
+        }
+
+        // Carregar horários disponíveis
+        function loadTimeSlots() {
+            const date = document.getElementById('appointmentDate').value;
+            if (!date) return;
+
+            const slotsContainer = document.getElementById('timeSlots');
+            slotsContainer.innerHTML = '';
+
+            const bookedSlots = appointments
+                .filter(apt => apt.date === date && apt.status !== 'cancelled')
+                .map(apt => apt.time);
+
+            timeSlots.forEach(time => {
+                const slot = document.createElement('div');
+                slot.className = 'time-slot';
+                slot.textContent = time;
+                
+                if (bookedSlots.includes(time)) {
+                    slot.className += ' unavailable';
+                } else {
+                    slot.onclick = () => selectTimeSlot(slot, time);
+                }
+                
+                slotsContainer.appendChild(slot);
+            });
+        }
+
+        function selectTimeSlot(element, time) {
+            document.querySelectorAll('.time-slot').forEach(slot => {
+                slot.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            selectedTimeSlot = time;
+        }
+
+        // Agendar serviço
+        function bookAppointment() {
+            const service = document.getElementById('serviceType').value;
+            const date = document.getElementById('appointmentDate').value;
+
+            if (!service) {
+                showModal('Erro', 'Selecione um serviço');
+                return;
+            }
+
+            if (!date) {
+                showModal('Erro', 'Selecione uma data');
+                return;
+            }
+
+            if (!selectedTimeSlot) {
+                showModal('Erro', 'Selecione um horário');
+                return;
+            }
+
+            const appointment = {
+                id: Date.now(),
+                clientCPF: currentClient,
+                clientName: clients[currentClient].name,
+                service,
+                date,
+                time: selectedTimeSlot,
+                status: 'pending',
+                created: new Date().toISOString()
+            };
+
+            appointments.push(appointment);
+            localStorage.setItem('barbershop_appointments', JSON.stringify(appointments));
+
+            showModal('Sucesso', 'Agendamento realizado com sucesso!');
+            
+            // Limpar formulário
+            document.getElementById('serviceType').value = '';
+            document.getElementById('appointmentDate').value = '';
+            document.getElementById('timeSlots').innerHTML = '';
+            selectedTimeSlot = null;
+            
+            loadClientAppointments();
+        }
+
+        // Carregar agendamentos do cliente
+        function loadClientAppointments() {
+            const container = document.getElementById('clientAppointments');
+            const clientAppointments = appointments.filter(apt => apt.clientCPF === currentClient);
+
+            if (clientAppointments.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #ccc;">Nenhum agendamento encontrado</p>';
+                return;
+            }
+
+            container.innerHTML = clientAppointments.map(apt => `
+                <div class="appointment-card">
+                    <h4>${apt.service}</h4>
+                    <p><strong>Data:</strong> ${formatDate(apt.date)}</p>
+                    <p><strong>Horário:</strong> ${apt.time}</p>
+                    <span class="appointment-status status-${apt.status}">
+                        ${getStatusText(apt.status)}
+                    </span>
+                    ${apt.status === 'pending' ? `
+                        <button class="btn btn-primary" style="margin-top: 1rem;" onclick="cancelAppointment(${apt.id})">
+                            Cancelar
+                        </button>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        // Sistema administrativo
+        function fillAdminDemo() {
+            document.getElementById('adminUser').value = 'admin';
+            document.getElementById('adminPass').value = '123456';
+            showModal('Info', 'Campos preenchidos! Agora clique em "Entrar"');
+        }
+
+        function adminLogin() {
+            const user = document.getElementById('adminUser').value.trim();
+            const pass = document.getElementById('adminPass').value.trim();
+
+            console.log('Tentativa de login:', { user, pass }); // Debug
+
+            if (user === 'admin' && pass === '123456') {
+                document.getElementById('adminLogin').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                loadAdminDashboard();
+                showModal('Sucesso', 'Login realizado com sucesso!');
+            } else {
+                showModal('Erro', `Credenciais inválidas. Tente: usuário="admin" e senha="123456"`);
+            }
+        }
+
+        // Carregar dashboard admin
+        function loadAdminDashboard() {
+            // Estatísticas
+            document.getElementById('totalAppointments').textContent = appointments.length;
+            
+            const today = new Date().toISOString().split('T')[0];
+            const todayAppointments = appointments.filter(apt => apt.date === today);
+            document.getElementById('todayAppointments').textContent = todayAppointments.length;
+            
+            document.getElementById('totalClients').textContent = Object.keys(clients).length;
+            
+            const thisMonth = new Date().getMonth();
+            const monthlyRevenue = appointments
+                .filter(apt => {
+                    const aptMonth = new Date(apt.date).getMonth();
+                    return aptMonth === thisMonth && apt.status !== 'cancelled';
+                })
+                .reduce((total, apt) => {
+                    const prices = {
+                        'Corte Clássico': 35,
+                        'Barba & Bigode': 25,
+                        'Pacote Completo': 55,
+                        'Infantil': 20
+                    };
+                    return total + (prices[apt.service] || 0);
+                }, 0);
+            
+            document.getElementById('monthRevenue').textContent = `R$ ${monthlyRevenue}`;
+
+            // Todos os agendamentos
+            loadAllAppointments();
+        }
+
+        function loadAllAppointments() {
+            const container = document.getElementById('allAppointments');
+            
+            if (appointments.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #ccc;">Nenhum agendamento encontrado</p>';
+                return;
+            }
+
+            const sortedAppointments = appointments.sort((a, b) => {
+                const dateA = new Date(a.date + ' ' + a.time);
+                const dateB = new Date(b.date + ' ' + b.time);
+                return dateB - dateA;
+            });
+
+            container.innerHTML = sortedAppointments.map(apt => `
+                <div class="appointment-card">
+                    <h4>${apt.service}</h4>
+                    <p><strong>Cliente:</strong> ${apt.clientName}</p>
+                    <p><strong>CPF:</strong> ${apt.clientCPF}</p>
+                    <p><strong>Data:</strong> ${formatDate(apt.date)}</p>
+                    <p><strong>Horário:</strong> ${apt.time}</p>
+                    <span class="appointment-status status-${apt.status}">
+                        ${getStatusText(apt.status)}
+                    </span>
+                    <div style="margin-top: 1rem;">
+                        ${apt.status === 'pending' ? `
+                            <button class="btn btn-primary" onclick="updateAppointmentStatus(${apt.id}, 'confirmed')" style="margin-right: 0.5rem;">
+                                Confirmar
+                            </button>
+                            <button class="btn btn-primary" onclick="updateAppointmentStatus(${apt.id}, 'cancelled')">
+                                Cancelar
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Funções auxiliares
+        function cancelAppointment(id) {
+            updateAppointmentStatus(id, 'cancelled', true);
+        }
+
+        function updateAppointmentStatus(id, status, isClient = false) {
+            const appointment = appointments.find(apt => apt.id === id);
+            if (appointment) {
+                appointment.status = status;
+                localStorage.setItem('barbershop_appointments', JSON.stringify(appointments));
+                
+                if (isClient) {
+                    loadClientAppointments();
+                    showModal('Sucesso', 'Agendamento cancelado');
+                } else {
+                    loadAdminDashboard();
+                    showModal('Sucesso', `Agendamento ${getStatusText(status).toLowerCase()}`);
+                }
+            }
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString + 'T00:00:00');
+            return date.toLocaleDateString('pt-BR');
+        }
+
+        function getStatusText(status) {
+            const statusMap = {
+                'pending': 'Pendente',
+                'confirmed': 'Confirmado',
+                'cancelled': 'Cancelado'
+            };
+            return statusMap[status] || status;
+        }
+
+        // Fechar modal ao clicar fora
+        window.onclick = function(event) {
+            const modal = document.getElementById('messageModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Formatação de CPF
+        document.getElementById('clientCPF').addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '');
+        });
+
+        // Formatação de telefone
+        document.getElementById('clientPhone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 11) {
+                value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+            } else if (value.length >= 6) {
+                value = value.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+            } else if (value.length >= 2) {
+                value = value.replace(/(\d{2})(\d{0,5})/, '($1) $2');
+            }
+            e.target.value = value;
+        });
+
+        // Login admin com Enter
+        document.getElementById('adminUser').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                adminLogin();
+            }
+        });
+
+        document.getElementById('adminPass').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                adminLogin();
+            }
+        });
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Dados de demonstração
+            if (Object.keys(clients).length === 0) {
+                clients = {
+                    '12345678901': { name: 'João Silva', phone: '(11) 99999-1234', created: new Date().toISOString() },
+                    '98765432109': { name: 'Maria Santos', phone: '(11) 88888-5678', created: new Date().toISOString() }
+                };
+                localStorage.setItem('barbershop_clients', JSON.stringify(clients));
+            }
+
+            if (appointments.length === 0) {
+                const today = new Date();
+                const tomorrow = new Date(today);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                
+                appointments = [
+                    {
+                        id: 1,
+                        clientCPF: '12345678901',
+                        clientName: 'João Silva',
+                        service: 'Corte Clássico',
+                        date: today.toISOString().split('T')[0],
+                        time: '14:00',
+                        status: 'confirmed',
+                        created: new Date().toISOString()
+                    },
+                    {
+                        id: 2,
+                        clientCPF: '98765432109',
+                        clientName: 'Maria Santos',
+                        service: 'Pacote Completo',
+                        date: tomorrow.toISOString().split('T')[0],
+                        time: '15:30',
+                        status: 'pending',
+                        created: new Date().toISOString()
+                    }
+                ];
+                localStorage.setItem('barbershop_appointments', JSON.stringify(appointments));
+            }
+        });
+    </script>
+</body>
+</html>

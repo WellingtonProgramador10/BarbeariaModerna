@@ -306,6 +306,38 @@
             transform: translateX(0);
         }
 
+        .login-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .error-message {
+            background: linear-gradient(45deg, #dc3545, #e74c3c);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: center;
+            display: none;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .success-login {
+            background: linear-gradient(45deg, #28a745, #34ce57);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: center;
+            animation: fadeIn 0.3s ease-in;
+        }
+
         .service-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -498,16 +530,61 @@
 
         <!-- Painel do Salão -->
         <div id="salon-panel" class="panel">
-            <h2 style="text-align: center; margin-bottom: 30px; color: #d4af37; font-size: 2rem;">
-                🏪 Painel de Controle do Salão
-            </h2>
-            
-            <div style="text-align: center; margin-bottom: 20px;">
-                <p style="color: #ccc; font-size: 1.1rem;">Gerencie os agendamentos pendentes</p>
+            <!-- Tela de Login -->
+            <div id="login-screen" class="login-container">
+                <h2 style="text-align: center; margin-bottom: 30px; color: #d4af37; font-size: 2rem;">
+                    🔐 Acesso Restrito - Funcionários
+                </h2>
+                
+                <form id="login-form" style="max-width: 400px; margin: 0 auto;">
+                    <div class="form-group">
+                        <label for="username">👤 Usuário</label>
+                        <input type="text" id="username" placeholder="Digite seu usuário" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">🔒 Senha</label>
+                        <input type="password" id="password" placeholder="Digite sua senha" required>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        🚪 Entrar no Sistema
+                    </button>
+
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(212, 175, 55, 0.1); border-radius: 10px; border-left: 4px solid #d4af37;">
+                        <p style="color: #d4af37; font-weight: bold; margin-bottom: 10px;">📋 Credenciais de Demonstração:</p>
+                        <p style="color: #ccc; margin: 5px 0;"><strong>Usuário:</strong> admin</p>
+                        <p style="color: #ccc; margin: 5px 0;"><strong>Senha:</strong> barbearia123</p>
+                        <p style="color: #ccc; margin: 5px 0;"><strong>Ou</strong></p>
+                        <p style="color: #ccc; margin: 5px 0;"><strong>Usuário:</strong> funcionario</p>
+                        <p style="color: #ccc; margin: 5px 0;"><strong>Senha:</strong> elite2025</p>
+                    </div>
+                </form>
             </div>
 
-            <div class="appointments-list" id="appointments-list">
-                <!-- Agendamentos serão exibidos aqui -->
+            <!-- Painel Principal (após login) -->
+            <div id="main-panel" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                    <h2 style="color: #d4af37; font-size: 2rem;">
+                        🏪 Painel de Controle do Salão
+                    </h2>
+                    <button onclick="logout()" class="action-btn reject-btn" style="padding: 10px 20px;">
+                        🚪 Sair
+                    </button>
+                </div>
+                
+                <div id="user-info" style="background: rgba(212, 175, 55, 0.1); padding: 15px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #d4af37;">
+                    <p style="color: #d4af37; font-weight: bold;">👋 Bem-vindo(a), <span id="logged-user"></span>!</p>
+                    <p style="color: #ccc; font-size: 0.9rem;">Acesso realizado em: <span id="login-time"></span></p>
+                </div>
+                
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <p style="color: #ccc; font-size: 1.1rem;">Gerencie os agendamentos pendentes</p>
+                </div>
+
+                <div class="appointments-list" id="appointments-list">
+                    <!-- Agendamentos serão exibidos aqui -->
+                </div>
             </div>
         </div>
     </div>
@@ -518,6 +595,14 @@
         let appointments = [];
         let selectedBarber = '';
         let selectedServices = [];
+        let isLoggedIn = false;
+        let currentUser = '';
+
+        // Usuários válidos para o sistema
+        const validUsers = {
+            'admin': 'barbearia123',
+            'funcionario': 'elite2025'
+        };
 
         // Configurar data mínima como hoje
         document.getElementById('appointment-date').min = new Date().toISOString().split('T')[0];
@@ -532,8 +617,74 @@
             document.getElementById(panel + '-panel').classList.add('active');
 
             if (panel === 'salon') {
-                displayAppointments();
+                if (isLoggedIn) {
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('main-panel').style.display = 'block';
+                    displayAppointments();
+                } else {
+                    document.getElementById('login-screen').style.display = 'block';
+                    document.getElementById('main-panel').style.display = 'none';
+                }
             }
+        }
+
+        // Sistema de Login
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Remover mensagens de erro anteriores
+            const existingError = document.querySelector('.error-message');
+            if (existingError) {
+                existingError.remove();
+            }
+
+            if (validUsers[username] && validUsers[username] === password) {
+                // Login bem-sucedido
+                isLoggedIn = true;
+                currentUser = username;
+                
+                // Mostrar mensagem de sucesso
+                const successDiv = document.createElement('div');
+                successDiv.className = 'success-login';
+                successDiv.innerHTML = '✅ Login realizado com sucesso! Redirecionando...';
+                document.getElementById('login-form').appendChild(successDiv);
+
+                setTimeout(() => {
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('main-panel').style.display = 'block';
+                    document.getElementById('logged-user').textContent = username === 'admin' ? 'Administrador' : 'Funcionário';
+                    document.getElementById('login-time').textContent = new Date().toLocaleString('pt-BR');
+                    displayAppointments();
+                    successDiv.remove();
+                }, 1500);
+
+                // Limpar formulário
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                
+            } else {
+                // Login falhou
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.style.display = 'block';
+                errorDiv.innerHTML = '❌ Usuário ou senha incorretos! Verifique as credenciais de demonstração abaixo.';
+                document.getElementById('login-form').appendChild(errorDiv);
+
+                setTimeout(() => {
+                    errorDiv.remove();
+                }, 5000);
+            }
+        });
+
+        function logout() {
+            isLoggedIn = false;
+            currentUser = '';
+            document.getElementById('login-screen').style.display = 'block';
+            document.getElementById('main-panel').style.display = 'none';
+            showNotification('Logout realizado com sucesso!', 'success');
         }
 
         // Seleção de barbeiro
